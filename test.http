@@ -1,0 +1,32 @@
+
+
+GET http://localhost:5000/
+
+### ユーザー一覧
+
+GET http://localhost:5000/api/users
+
+
+### 新規登録
+
+POST http://127.0.0.1:5000/api/auth/register/
+Content-Type: application/json
+
+{
+    "name": "kevin",
+    "email": "kevin@test.com",
+    "password": "password"
+}
+
+### ログイン
+POST http://127.0.0.1:5000/api/auth/login/
+Content-Type: application/json
+
+{
+    "email": "kevin@test.com",
+    "password": "password"
+}
+
+### Auth以下のページを取得する際
+GET http://127.0.0.1:5000/api/auth/user/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6ImtldmluIiwiZW1haWwiOiJrZXZpbkB0ZXN0LmNvbSIsImlhdCI6MTY2ODI1OTM0NH0.Db-kllo4YuwEKefEP99LxrpIyU7fM-qplWkRoJn4Kvo
