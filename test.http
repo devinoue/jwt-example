@@ -30,3 +30,7 @@ Content-Type: application/json
 ### Auth以下のページを取得する際
 GET http://127.0.0.1:5000/api/auth/user/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6ImtldmluIiwiZW1haWwiOiJrZXZpbkB0ZXN0LmNvbSIsImlhdCI6MTY2ODI1OTM0NH0.Db-kllo4YuwEKefEP99LxrpIyU7fM-qplWkRoJn4Kvo
+
+
+### httpOnlyのテスト
+GET http://127.0.0.1:5000/httponly

@@ -7,6 +7,7 @@
 const express = require("express");
 const app = express();
 const { expressjwt: jwt } = require("express-jwt");
+const cors = require("cors");
 const jsonwebtoken = require("jsonwebtoken");
 
 const port = 5000;
@@ -23,10 +24,56 @@ const db = new sqlite3.Database("./database/database.sqlite3", (err) => {
   }
   console.log("Connected to the SQlite database.");
 });
-
 app.use(express.json());
+app.disable("etag");
+var corsOptions = {
+  credentials: true,
+  origin: ["http://localhost:3000", "http://127.0.0.1:5000"],
+};
+
+app.use(cors(corsOptions));
 
 app.get("/", (request, response) => response.send("Hello World!!"));
+
+app.get("/httponly", async (req, res) => {
+  const salt = await bcrypt.genSalt();
+  const hashed = await bcrypt.hash(new Date().toLocaleString(), salt);
+
+  // 参考: https://geekflare.com/enable-cors-httponly-cookie-secure-token/
+  return res
+    .cookie("token", hashed, {
+      expires: new Date(Date.now() + 3600 * 1000 * 24 * 180 * 1), //second min hour days year
+      secure: true, // set to true if your using https or samesite is none
+      httpOnly: true, // backend only
+      sameSite: "Strict", // set to none for cross-request
+      //cookieをNoneにする場合はcookieにsecure属性が必須となる。
+      //secure属性をつけるとhttps通信の時しかcookieのやりとりができなくなる。
+      // ローカル環境でクロスオリジンクッキーを使う場合、Dockerなどを使ってhttps環境を作る必要がある
+    })
+    .json({
+      message: "success",
+    });
+});
+
+app.post("/httponly", async (req, res) => {
+  const salt = await bcrypt.genSalt();
+  const hashed = await bcrypt.hash(new Date().toLocaleString(), salt);
+
+  // 参考: https://geekflare.com/enable-cors-httponly-cookie-secure-token/
+  return res
+    .cookie("token", hashed, {
+      expires: new Date(Date.now() + 3600 * 1000 * 24 * 180 * 1), //second min hour days year
+      // secure: true, // set to true if your using https or samesite is none
+      httpOnly: true, // backend only
+      sameSite: "strict", // set to none for cross-request
+      //cookieをNoneにする場合はcookieにsecure属性が必須となる。
+      //secure属性をつけるとhttps通信の時しかcookieのやりとりができなくなる。
+      // ローカル環境でクロスオリジンクッキーを使う場合、Dockerなどを使ってhttps環境を作る必要がある
+    })
+    .json({
+      message: "POST success",
+    });
+});
 
 app.get("/api/users", (req, res) => {
   const sql = "select * from users";
